@@ -107,3 +107,50 @@ AWS Service Control Policy (SCP)—a type of policy used in Amazon Web Services 
 }
 ```
 Typically used to protect log archives (CloudTrail, access logs, etc.).
+
+## Policy 5 - protecting a specific CloudTrail trail from being tampered with—it ensures logging stays on and cannot be weakened or removed.
+```bash
+{
+    "Version": "2012-10-17",
+    "Statement": [
+      {
+        "Sid": "AWSCloudTrailManagement",
+        "Effect": "Deny",
+        "Action": [
+          "cloudtrail:StopLogging", # Prevents turning off logging
+          "cloudtrail:DeleteTrail", # Prevents deleting the trail entirely
+          "cloudtrail:PutEventSelectors", # Prevents changing what events are logged
+          "cloudtrail:UpdateTrail" # Prevents modifying trail settings
+        ],
+        "Resource": "arn:aws:cloudtrail:<REGION>:<ACCOUNT_ID>:trail/<trail-name>"
+      }
+      
+    ]
+    
+  }
+```
+**So this SCP applies only to that named trail—not all trails.**
+If an attacker gains access, one of the first things they might try is:
+- Disable logging
+- Delete trails
+- Reduce visibility
+
+## Policy 6 - CloudTrail trail must remain exactly as it is—no deletion, no modification, no stopping.
+```bash
+  {
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "EnableLogFileIntegrityValidation",
+            "Effect": "Deny",
+            "Action": [
+                "cloudtrail:DeleteTrail",
+                "cloudtrail:PutEventSelectors",
+                "cloudtrail:StopLogging",
+                "cloudtrail:UpdateTrail"
+            ],
+            "Resource": "arn:aws:cloudtrail:region:acct-id:trail/trail-name"
+          }
+    ]
+}
+```
