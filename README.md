@@ -262,3 +262,46 @@ Workloads OU:
   Enforce MFA
   Restrict services
 ```
+
+# Realistic architecture for ~100 microservices into AWS accounts, OUs, networking, and access.
+## Step 1: Group microservices into domains
+Instead of 100 separate units, group them by business/domain boundaries:
+Example:
+```bash
+User Domain        → auth, profile, preferences
+Order Domain       → order, cart, checkout
+Payment Domain     → billing, invoices, transactions
+Catalog Domain     → product, inventory, search
+Notification Domain→ email, sms, push
+```
+## Step 2: Map domains to AWS accounts
+Each domain gets its own account per environment:
+```bash
+Workloads OU
+├── user-dev
+├── user-prod
+├── order-dev
+├── order-prod
+├── payment-dev
+├── payment-prod
+├── Catalog-dev
+├── Catalog-prod
+├── Notification-dev
+├── Notification-prod
+```
+So instead of 100 accounts:You get ~20–30 accounts total
+## Benefits
+- Strong isolation between domains
+- Smaller blast radius
+- Teams can own their domain end-to-end
+## Step 3: Networking architecture
+Use a hub-and-spoke model: AWS Transit Gateway
+```bash
+           Shared Services Account
+                 (Hub VPC)
+                       │
+        ┌──────────────┼──────────────┐
+        │              │              │
+   User VPC       Order VPC     Payment VPC
+   (Spoke)        (Spoke)        (Spoke)
+```
