@@ -85,3 +85,25 @@ AWS Service Control Policy (SCP)—a type of policy used in Amazon Web Services 
   - Billing and security controls are bypassed
 - Organizations attach this SCP at: The root OU (top level)
 
+## Policy 4 - prevents deletion of logs (or any data) in a specific S3 bucket.
+```bash
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "DenyDeleteActionsOnLogArchives",
+      "Effect": "Deny",
+      "Action": [
+        "s3:DeleteBucket", # Prevents deleting the entire bucket
+        "s3:DeleteObject", # Prevents deleting current objects
+        "s3:DeleteObjectVersion" # Prevents deleting specific versions (important if versioning is enabled)
+      ],
+      "Resource": [
+        "arn:aws:s3:::<BUCKET_NAME>",
+        "arn:aws:s3:::<BUCKET_NAME>/*"
+      ]
+    }
+  ]
+}
+```
+Typically used to protect log archives (CloudTrail, access logs, etc.).
