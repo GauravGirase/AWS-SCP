@@ -184,3 +184,23 @@ AWS Config is used for:
 - Tracking resource changes
 - Compliance monitoring
 - Auditing configurations
+## Policy 8 - Deny creating long-term access keys for the root user.
+```bash
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Deny",
+      "Action": [
+        "iam:CreateAccessKey"
+      ],
+      "Resource": "*",
+      "Condition": {
+        "StringLike": {
+          "aws:PrincipalARN": "arn:aws:iam::*:root"
+        }
+      }
+    }
+  ]
+}
+```
