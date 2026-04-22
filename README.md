@@ -238,3 +238,27 @@ python3 policy_apply.py
 ```bash
 python3 policy_remove.py
 ```
+# How SCP attachment actually works
+SCPs can be attached to:
+- Root (entire organization)
+- OU (group of accounts) ✅ most common
+- Individual account (for exceptions)
+## Example with your structure
+```bash
+Root
+├── Security OU
+├── Shared OU
+└── Workloads OU
+```
+### Attach SCPs like:
+```bash
+Root:
+  Deny leaving org
+Security OU:
+  Deny deleting logs
+  Deny stopping CloudTrail
+Workloads OU:
+  Deny root access keys
+  Enforce MFA
+  Restrict services
+```
