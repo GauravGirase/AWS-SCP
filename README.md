@@ -204,3 +204,37 @@ AWS Config is used for:
   ]
 }
 ```
+# Automation 
+## Step 1: Congiuration
+```bash
+# config.ini
+[SCOPES]
+policy_dict = { 
+    "<ROOT_OU_ID>": ["denyLeaveOrganization.json"], ["denyConfigChange.json"], ["denyRootAccessKey.json"], 
+    "<COMPLIANT_OU_ID>": ["denyLoginIAM.json"], ["denyRootUnlessMFA.json"], ["denyDeleteActionsOnLogArchives.json"], ["denyAWSCloudTrailManagement.json"], ["denyLogFileIntegrityValidation.json"]}
+
+[PATHS]
+policies_folder_path = ../policies
+```
+Update ROOT_OU_ID & COMPLIANT_OU_ID
+
+## Step 2 - ENV setup
+### Install the dependencies
+```bash
+pip install boto3
+pip install pytest pytest-json-report
+```
+### Set all AWS credential that has permission on Organization SCP, also another credential as a user to validate the test
+```bash
+export AWS_PROFILE=admin (with permission to Organization SCP)
+export AWS_PROFILE=user (for testing)
+```
+## Step 3 - Commands to use
+- To create and attach the policy to OU, (note that for this, you have to set aws credential to admin)
+```bash
+python3 policy-setup.py 
+```
+- To detach and delete policy from OU, (note that for this, you have to set aws credential to admin)
+```bash
+python3 remove_scp.py
+```
