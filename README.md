@@ -154,3 +154,33 @@ If an attacker gains access, one of the first things they might try is:
     ]
 }
 ```
+## Policy 7 - protecting AWS Config so it can’t be turned off or dismantled
+```bash
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "EnableAWSConfig",
+      "Effect": "Deny",
+      "Action": [
+        "config:DeleteConfigurationRecorder", # 
+        "config:DeleteDeliveryChannel", # Prevents deleting where Config sends data (e.g., S3 bucket, SNS)
+        "config:DeleteRetentionConfiguration", # Prevents removing retention rules (how long data is kept)
+        "config:StopConfigurationRecorder", # revents turning off AWS Config recording
+        "config:DeleteAggregationAuthorization", # Prevents removing permissions for cross-account aggregation
+        "config:DeleteConfigurationAggregator" # Prevents deleting aggregated views across accounts
+      ],
+      "Resource": "*"
+    }
+  ]
+}
+```
+This SCP enforces:
+- You cannot stop AWS Config
+- You cannot delete its components
+- You cannot dismantle org-wide aggregation
+
+AWS Config is used for:
+- Tracking resource changes
+- Compliance monitoring
+- Auditing configurations

@@ -1,0 +1,18 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "EnableAWSConfig",
+      "Effect": "Deny",
+      "Action": [
+        "config:DeleteConfigurationRecorder",
+        "config:DeleteDeliveryChannel",
+        "config:DeleteRetentionConfiguration",
+        "config:StopConfigurationRecorder",
+        "config:DeleteAggregationAuthorization",
+        "config:DeleteConfigurationAggregator"
+      ],
+      "Resource": "*"
+    }
+  ]
+}
