@@ -232,9 +232,9 @@ export AWS_PROFILE=user (for testing)
 ## Step 3 - Commands to use
 - To create and attach the policy to OU, (note that for this, you have to set aws credential to admin)
 ```bash
-python3 policy-setup.py 
+python3 policy_apply.py 
 ```
 - To detach and delete policy from OU, (note that for this, you have to set aws credential to admin)
 ```bash
-python3 remove_scp.py
+python3 policy_remove.py
 ```
